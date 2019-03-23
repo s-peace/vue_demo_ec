@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@2.5.17"></script>
+</head>
+<body>
+  <div id="app">
+    <p>{{items[0].name}}:{{items[0].price}}x{{items[0].quantity}}</p>
+    <p>sub total: {{1000 | numberWithDelimiter}}yen</p>
+    <p>sum(with tax): {{totalPriceWithTax | numberWithDelimiter}}yen</p>
+    <p v-show="!canBuy">
+      u can buy more than {{1000 | numberWithDelimiter}} yen
+    </p>
+  </div>
+  <script>
+    let items = [
+      {
+        name: 'pen',
+        price: 300,
+        quantity: 0,
+      },
+      {
+        name: 'note',
+        price: 400,
+        quantity: 0,
+      },
+      {
+        name: 'eraser',
+        price: 500,
+        quantity: 0,
+      }
+    ]
+    let vm = new Vue({
+      el: "#app",
+      data: {
+        items: items
+      },
+      filters: {
+        numberWithDelimiter: function(value){
+          if(!value){
+            return '0'
+          }
+          return value.toString().replace(/(\d)(?=(\d{3})+$)/g,'$1,')
+        }
+      },
+      computed: {
+        totalPrice: function(){
+          return this.items.reduce(function(sum,item){
+            return sum + (item.price * item.quantity)
+          },0)
+        },
+        totalPriceWithTax: function(){
+          return Math.floor(this.totalPrice * 1.08)
+        },
+        canBuy: function(){
+          return this.totalPrice >= 1000
+        }
+      }
+    })
+    </script>
+    <!-- <script src="app.js"></script> -->
+</body>
+</html>
