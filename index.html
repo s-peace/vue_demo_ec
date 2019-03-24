@@ -12,7 +12,12 @@
     <div :style="errorMessageStyle">
       <ul>
         <li v-for="item in items" v-bind:key="item.name">
-          {{item.name}}:{{item.price}}x{{item.quantity}} 
+          {{item.name}} is 
+          <input type="number"
+          v-model="item.quantity"
+          min=0
+          >
+          :{{item.price}}x{{item.quantity}} 
               = {{item.price * item.quantity | numberWithDelimiter}} yen
         </li>
       </ul>
@@ -22,6 +27,7 @@
       <p v-show:="!canBuy">
         u can buy more than {{1000 | numberWithDelimiter}} yen
       </p>
+      <button v-bind:disabled="!canBuy" v-on:click="doBuy">buy</button>
     </div>
   </div>
   <script>
@@ -53,6 +59,14 @@
             return '0'
           }
           return value.toString().replace(/(\d)(?=(\d{3})+$)/g,'$1,')
+        }
+      },
+      methods: {
+        doBuy:function(){
+          alert(this.totalPriceWithTax + 'yen,u bought')
+          this.items.forEach(function(item){
+            item.quantity = 0
+          })
         }
       },
       computed: {

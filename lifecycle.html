@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@2.5.17"></script>
+</head>
+<body>
+  <div id="app">
+    <p>{{count}}</p>
+    <p>{{message}}</p>
+  </div>
+
+  <script>
+    let vm = new Vue({
+      el: '#app',
+      data:{
+        // return{
+        //   count:0,
+        //   timerId:null
+        // },
+        messagePrefix: 'hello!'
+      },
+      computed:{
+        message: function(){
+          let timestamp = Date.now()
+          return this.messagePrefix + ', ' + timestamp
+        }
+      },
+      created(){
+        console.log('created')
+        let that = this
+        console.log(this.count)
+        console.log(this.$el)
+        this.timerId = setInterval(() => {
+          that.count += 1
+        },1000)
+      },
+      mounted(){
+        console.log('mounted')
+        console.log('this.$el')
+      },
+      beforeDestroy(){
+        console.log('beforeDestroy')
+        clearInterval(this.timerId)
+      }
+    })
+    window.vm = vm
+  </script>
+</body>
+</html>
